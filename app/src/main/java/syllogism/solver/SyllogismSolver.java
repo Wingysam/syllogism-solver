@@ -1,5 +1,7 @@
 package syllogism.solver;
 
+import java.util.ArrayList;
+
 public class SyllogismSolver {
 	public static void main(String[] args) {
 		char[] moods = { 'A', 'E', 'I', 'O' };
@@ -12,7 +14,19 @@ public class SyllogismSolver {
 					for (Integer form : forms) {
 						String syllogismType = "" + majorPremiseMood + minorPremiseMood + conclusionMood + "-" + form;
 						Syllogism syllogism = syllogismFactory.Syllogism(syllogismType);
-						System.out.println(syllogismType + ": " + syllogism.isValid());
+						Fallacy[] fallacies = syllogism.getFallacies();
+						String text = syllogismType + ": ";
+						if (fallacies.length > 0) {
+							Integer i = 0;
+							for (Fallacy fallacy: fallacies) {
+								if (i > 0) text += ", ";
+								text += fallacy;
+								i++;
+							}
+						} else {
+							text += "VALID";
+						}
+						System.out.println(text);
 					}
 				}
 			}
@@ -91,31 +105,49 @@ class Syllogism {
 	}
 
 	Boolean isValid() {
-		if (!isMiddleTermDistributedInAtLeastOnePremise())
-			return false;
-		if (!ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise())
-			return false;
-		if (areBothPremisesNegative())
-			return false;
-		if (hasNegativePremiseAndAffirmativeConclusion())
-			return false;
-		if (hasTwoAffirmativePremisesAndNegativeConclusion())
-			return false;
-		return true;
+		return getFallacies().length == 0;
+	}
+
+	Fallacy[] getFallacies() {
+		ArrayList<Fallacy> fallacies = new ArrayList<Fallacy>();
+
+		if (!isMiddleTermDistributedInAtLeastOnePremise()) {
+			fallacies.add(Fallacy.FALLACY_OF_THE_UNDISTRIBUTED_MIDDLE);
+		}
+
+		if (!ifMajorTermDistributedInConclusionIsItAlsoDistributedInMajorPremise()) {
+			fallacies.add(Fallacy.FALLACY_OF_AN_ILLICIT_MAJOR);
+		}
+
+		if (!ifMinorTermDistributedInConclusionIsItAlsoDistributedInMinorPremise()) {
+			fallacies.add(Fallacy.FALLACY_OF_AN_ILLICIT_MINOR);
+		}
+
+		if (areBothPremisesNegative()) {
+			fallacies.add(Fallacy.FALLACY_OF_TWO_NEGATIVE_PREMISES);
+		}
+
+		if (hasNegativePremiseAndAffirmativeConclusion()) {
+			fallacies.add(Fallacy.FALLACY_OF_A_NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION);
+		}
+
+		if (hasTwoAffirmativePremisesAndNegativeConclusion()) {
+			fallacies.add(Fallacy.FALLACY_OF_TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION);
+		}
+
+		return fallacies.toArray(new Fallacy[0]);
 	}
 
 	Boolean isMiddleTermDistributedInAtLeastOnePremise() {
 		return majorPremise.isMiddleTermDistributed() || minorPremise.isMiddleTermDistributed();
 	}
 
-	Boolean ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise() {
-		if (conclusion.subjectDistributed && !minorPremise.isMajorOrMinorTermDistributed()) {
-			return false;
-		}
-		if (conclusion.predicateDistributed && !majorPremise.isMajorOrMinorTermDistributed()) {
-			return false;
-		}
-		return true;
+	Boolean ifMajorTermDistributedInConclusionIsItAlsoDistributedInMajorPremise() {
+		return !conclusion.predicateDistributed || majorPremise.isMajorOrMinorTermDistributed();
+	}
+
+	Boolean ifMinorTermDistributedInConclusionIsItAlsoDistributedInMinorPremise() {
+		return !conclusion.subjectDistributed || minorPremise.isMajorOrMinorTermDistributed();
 	}
 
 	Boolean areBothPremisesNegative() {
@@ -131,6 +163,15 @@ class Syllogism {
 		return majorPremise.quality == Quality.AFFIRMATIVE && minorPremise.quality == Quality.AFFIRMATIVE
 				&& conclusion.quality == Quality.NEGATIVE;
 	}
+}
+
+enum Fallacy {
+	FALLACY_OF_THE_UNDISTRIBUTED_MIDDLE,
+	FALLACY_OF_AN_ILLICIT_MAJOR,
+	FALLACY_OF_AN_ILLICIT_MINOR,
+	FALLACY_OF_TWO_NEGATIVE_PREMISES,
+	FALLACY_OF_A_NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION,
+	FALLACY_OF_TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION
 }
 
 class Statement {
