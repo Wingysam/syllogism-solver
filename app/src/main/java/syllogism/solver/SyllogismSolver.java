@@ -6,10 +6,10 @@ public class SyllogismSolver {
 		Integer[] forms = { 1, 2, 3, 4 };
 		SyllogismFactory syllogismFactory = new SyllogismFactory();
 
-		for (char majorPremiseMood: moods) {
-			for (char minorPremiseMood: moods) {
-				for (char conclusionMood: moods) {
-					for (Integer form: forms) {
+		for (char majorPremiseMood : moods) {
+			for (char minorPremiseMood : moods) {
+				for (char conclusionMood : moods) {
+					for (Integer form : forms) {
 						String syllogismType = "" + majorPremiseMood + minorPremiseMood + conclusionMood + "-" + form;
 						Syllogism syllogism = syllogismFactory.Syllogism(syllogismType);
 						System.out.println(syllogismType + ": " + syllogism.isValid());
@@ -21,7 +21,7 @@ public class SyllogismSolver {
 }
 
 class SyllogismFactory {
-	Syllogism Syllogism (String type) {
+	Syllogism Syllogism(String type) {
 		StatementFactory statementFactory = new StatementFactory();
 		Integer form = Character.getNumericValue(type.charAt(4));
 
@@ -46,10 +46,9 @@ class SyllogismFactory {
 		}
 
 		return new Syllogism(
-			statementFactory.Statement(type.charAt(0), majorPremiseSubject, majorPremisePredicate),
-			statementFactory.Statement(type.charAt(1), minorPremiseSubject, minorPremisePredicate),
-			statementFactory.Statement(type.charAt(2), Term.MinorTerm, Term.MajorTerm)
-		);
+				statementFactory.Statement(type.charAt(0), majorPremiseSubject, majorPremisePredicate),
+				statementFactory.Statement(type.charAt(1), minorPremiseSubject, minorPremisePredicate),
+				statementFactory.Statement(type.charAt(2), Term.MinorTerm, Term.MajorTerm));
 	}
 }
 
@@ -73,26 +72,32 @@ class Syllogism {
 	Statement majorPremise;
 	Statement minorPremise;
 	Statement conclusion;
-	Syllogism (Statement majorPremise, Statement minorPremise, Statement conclusion) {
+
+	Syllogism(Statement majorPremise, Statement minorPremise, Statement conclusion) {
 		this.majorPremise = majorPremise;
 		this.minorPremise = minorPremise;
 		this.conclusion = conclusion;
 	}
 
-	Boolean isValid () {
-		if (!isMiddleTermDistributedInAtLeastOnePremise()) return false;
-		if (!ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise()) return false;
-		if (areBothPremisesNegative()) return false;
-		if (hasNegativePremiseAndAffirmativeConclusion()) return false;
-		if (hasTwoAffirmativePremisesAndNegativeConclusion()) return false;
+	Boolean isValid() {
+		if (!isMiddleTermDistributedInAtLeastOnePremise())
+			return false;
+		if (!ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise())
+			return false;
+		if (areBothPremisesNegative())
+			return false;
+		if (hasNegativePremiseAndAffirmativeConclusion())
+			return false;
+		if (hasTwoAffirmativePremisesAndNegativeConclusion())
+			return false;
 		return true;
 	}
 
-	Boolean isMiddleTermDistributedInAtLeastOnePremise () {
+	Boolean isMiddleTermDistributedInAtLeastOnePremise() {
 		return majorPremise.isMiddleTermDistributed() || minorPremise.isMiddleTermDistributed();
 	}
 
-	Boolean ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise () {
+	Boolean ifTermDistributedInConclusionIsItAlsoDistributedInItsPremise() {
 		if (conclusion.subjectDistributed && !minorPremise.isMajorOrMinorTermDistributed()) {
 			return false;
 		}
@@ -106,12 +111,14 @@ class Syllogism {
 		return majorPremise.quality == Quality.Negative && minorPremise.quality == Quality.Negative;
 	}
 
-	Boolean hasNegativePremiseAndAffirmativeConclusion () {
-		return (majorPremise.quality == Quality.Negative || minorPremise.quality == Quality.Negative) && conclusion.quality == Quality.Affirmative;
+	Boolean hasNegativePremiseAndAffirmativeConclusion() {
+		return (majorPremise.quality == Quality.Negative || minorPremise.quality == Quality.Negative)
+				&& conclusion.quality == Quality.Affirmative;
 	}
 
-	Boolean hasTwoAffirmativePremisesAndNegativeConclusion () {
-		return majorPremise.quality == Quality.Affirmative && minorPremise.quality == Quality.Affirmative && conclusion.quality == Quality.Negative;
+	Boolean hasTwoAffirmativePremisesAndNegativeConclusion() {
+		return majorPremise.quality == Quality.Affirmative && minorPremise.quality == Quality.Affirmative
+				&& conclusion.quality == Quality.Negative;
 	}
 }
 
@@ -133,12 +140,13 @@ class Statement {
 	Term subject;
 	Term predicate;
 	Term majorOrMinorTermDistributed;
-	Statement (Term subject, Term predicate) {
+
+	Statement(Term subject, Term predicate) {
 		this.subject = subject;
 		this.predicate = predicate;
 	}
 
-	Boolean isMiddleTermDistributed () {
+	Boolean isMiddleTermDistributed() {
 		if (subject == Term.MiddleTerm) {
 			return subjectDistributed;
 		} else if (predicate == Term.MiddleTerm) {
@@ -148,7 +156,7 @@ class Statement {
 		}
 	}
 
-	Boolean isMajorOrMinorTermDistributed () {
+	Boolean isMajorOrMinorTermDistributed() {
 		if (subject == Term.MiddleTerm) {
 			return predicateDistributed;
 		} else if (predicate == Term.MiddleTerm) {
@@ -160,7 +168,7 @@ class Statement {
 }
 
 class StatementA extends Statement {
-	StatementA (Term subject, Term predicate) {
+	StatementA(Term subject, Term predicate) {
 		super(subject, predicate);
 		this.subjectDistributed = true;
 		this.predicateDistributed = false;
@@ -169,7 +177,7 @@ class StatementA extends Statement {
 }
 
 class StatementE extends Statement {
-	StatementE (Term subject, Term predicate) {
+	StatementE(Term subject, Term predicate) {
 		super(subject, predicate);
 		this.subjectDistributed = true;
 		this.predicateDistributed = true;
@@ -178,7 +186,7 @@ class StatementE extends Statement {
 }
 
 class StatementI extends Statement {
-	StatementI (Term subject, Term predicate) {
+	StatementI(Term subject, Term predicate) {
 		super(subject, predicate);
 		this.subjectDistributed = false;
 		this.predicateDistributed = false;
@@ -187,7 +195,7 @@ class StatementI extends Statement {
 }
 
 class StatementO extends Statement {
-	StatementO (Term subject, Term predicate) {
+	StatementO(Term subject, Term predicate) {
 		super(subject, predicate);
 		this.subjectDistributed = false;
 		this.predicateDistributed = true;
