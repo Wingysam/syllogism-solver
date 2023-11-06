@@ -88,11 +88,6 @@ enum Term {
 	MIDDLE_TERM
 }
 
-enum Quality {
-	AFFIRMATIVE,
-	NEGATIVE
-}
-
 class Syllogism {
 	Statement majorPremise;
 	Statement minorPremise;
@@ -172,6 +167,11 @@ enum Fallacy {
 	FALLACY_OF_TWO_NEGATIVE_PREMISES,
 	FALLACY_OF_A_NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION,
 	FALLACY_OF_TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION
+}
+
+enum Quality {
+	AFFIRMATIVE,
+	NEGATIVE
 }
 
 class Statement {
