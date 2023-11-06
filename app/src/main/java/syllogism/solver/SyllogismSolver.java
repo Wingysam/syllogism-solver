@@ -28,27 +28,27 @@ class SyllogismFactory {
 		Term majorPremiseSubject;
 		Term majorPremisePredicate;
 		if (form == 1 || form == 3) {
-			majorPremiseSubject = Term.MiddleTerm;
-			majorPremisePredicate = Term.MajorTerm;
+			majorPremiseSubject = Term.MIDDLE_TERM;
+			majorPremisePredicate = Term.MAJOR_TERM;
 		} else {
-			majorPremiseSubject = Term.MajorTerm;
-			majorPremisePredicate = Term.MiddleTerm;
+			majorPremiseSubject = Term.MAJOR_TERM;
+			majorPremisePredicate = Term.MIDDLE_TERM;
 		}
 
 		Term minorPremiseSubject;
 		Term minorPremisePredicate;
 		if (form == 1 || form == 2) {
-			minorPremiseSubject = Term.MinorTerm;
-			minorPremisePredicate = Term.MiddleTerm;
+			minorPremiseSubject = Term.MINOR_TERM;
+			minorPremisePredicate = Term.MIDDLE_TERM;
 		} else {
-			minorPremiseSubject = Term.MiddleTerm;
-			minorPremisePredicate = Term.MinorTerm;
+			minorPremiseSubject = Term.MIDDLE_TERM;
+			minorPremisePredicate = Term.MINOR_TERM;
 		}
 
 		return new Syllogism(
 				statementFactory.Statement(type.charAt(0), majorPremiseSubject, majorPremisePredicate),
 				statementFactory.Statement(type.charAt(1), minorPremiseSubject, minorPremisePredicate),
-				statementFactory.Statement(type.charAt(2), Term.MinorTerm, Term.MajorTerm));
+				statementFactory.Statement(type.charAt(2), Term.MINOR_TERM, Term.MAJOR_TERM));
 	}
 }
 
@@ -66,6 +66,17 @@ class StatementFactory {
 		}
 		throw new Error("Unknown mood " + mood);
 	}
+}
+
+enum Term {
+	MAJOR_TERM,
+	MINOR_TERM,
+	MIDDLE_TERM
+}
+
+enum Quality {
+	AFFIRMATIVE,
+	NEGATIVE
 }
 
 class Syllogism {
@@ -108,29 +119,18 @@ class Syllogism {
 	}
 
 	Boolean areBothPremisesNegative() {
-		return majorPremise.quality == Quality.Negative && minorPremise.quality == Quality.Negative;
+		return majorPremise.quality == Quality.NEGATIVE && minorPremise.quality == Quality.NEGATIVE;
 	}
 
 	Boolean hasNegativePremiseAndAffirmativeConclusion() {
-		return (majorPremise.quality == Quality.Negative || minorPremise.quality == Quality.Negative)
-				&& conclusion.quality == Quality.Affirmative;
+		return (majorPremise.quality == Quality.NEGATIVE || minorPremise.quality == Quality.NEGATIVE)
+				&& conclusion.quality == Quality.AFFIRMATIVE;
 	}
 
 	Boolean hasTwoAffirmativePremisesAndNegativeConclusion() {
-		return majorPremise.quality == Quality.Affirmative && minorPremise.quality == Quality.Affirmative
-				&& conclusion.quality == Quality.Negative;
+		return majorPremise.quality == Quality.AFFIRMATIVE && minorPremise.quality == Quality.AFFIRMATIVE
+				&& conclusion.quality == Quality.NEGATIVE;
 	}
-}
-
-enum Term {
-	MajorTerm,
-	MinorTerm,
-	MiddleTerm
-}
-
-enum Quality {
-	Affirmative,
-	Negative
 }
 
 class Statement {
@@ -147,9 +147,9 @@ class Statement {
 	}
 
 	Boolean isMiddleTermDistributed() {
-		if (subject == Term.MiddleTerm) {
+		if (subject == Term.MIDDLE_TERM) {
 			return subjectDistributed;
-		} else if (predicate == Term.MiddleTerm) {
+		} else if (predicate == Term.MIDDLE_TERM) {
 			return predicateDistributed;
 		} else {
 			throw new Error("Statement does not include a middle term");
@@ -157,9 +157,9 @@ class Statement {
 	}
 
 	Boolean isMajorOrMinorTermDistributed() {
-		if (subject == Term.MiddleTerm) {
+		if (subject == Term.MIDDLE_TERM) {
 			return predicateDistributed;
-		} else if (predicate == Term.MiddleTerm) {
+		} else if (predicate == Term.MIDDLE_TERM) {
 			return subjectDistributed;
 		} else {
 			throw new Error("Statement has two middle terms");
@@ -172,7 +172,7 @@ class StatementA extends Statement {
 		super(subject, predicate);
 		this.subjectDistributed = true;
 		this.predicateDistributed = false;
-		this.quality = Quality.Affirmative;
+		this.quality = Quality.AFFIRMATIVE;
 	}
 }
 
@@ -181,7 +181,7 @@ class StatementE extends Statement {
 		super(subject, predicate);
 		this.subjectDistributed = true;
 		this.predicateDistributed = true;
-		this.quality = Quality.Negative;
+		this.quality = Quality.NEGATIVE;
 	}
 }
 
@@ -190,7 +190,7 @@ class StatementI extends Statement {
 		super(subject, predicate);
 		this.subjectDistributed = false;
 		this.predicateDistributed = false;
-		this.quality = Quality.Affirmative;
+		this.quality = Quality.AFFIRMATIVE;
 	}
 }
 
@@ -199,6 +199,6 @@ class StatementO extends Statement {
 		super(subject, predicate);
 		this.subjectDistributed = false;
 		this.predicateDistributed = true;
-		this.quality = Quality.Negative;
+		this.quality = Quality.NEGATIVE;
 	}
 }
