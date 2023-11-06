@@ -18,8 +18,9 @@ public class SyllogismSolver {
 						String text = syllogismType + ": ";
 						if (fallacies.length > 0) {
 							Integer i = 0;
-							for (Fallacy fallacy: fallacies) {
-								if (i > 0) text += ", ";
+							for (Fallacy fallacy : fallacies) {
+								if (i > 0)
+									text += ", ";
 								text += fallacy;
 								i++;
 							}
@@ -133,28 +134,28 @@ class Syllogism {
 		return fallacies.toArray(new Fallacy[0]);
 	}
 
-	Boolean isMiddleTermDistributedInAtLeastOnePremise() {
+	private Boolean isMiddleTermDistributedInAtLeastOnePremise() {
 		return majorPremise.isMiddleTermDistributed() || minorPremise.isMiddleTermDistributed();
 	}
 
-	Boolean ifMajorTermDistributedInConclusionIsItAlsoDistributedInMajorPremise() {
+	private Boolean ifMajorTermDistributedInConclusionIsItAlsoDistributedInMajorPremise() {
 		return !conclusion.predicateDistributed || majorPremise.isMajorOrMinorTermDistributed();
 	}
 
-	Boolean ifMinorTermDistributedInConclusionIsItAlsoDistributedInMinorPremise() {
+	private Boolean ifMinorTermDistributedInConclusionIsItAlsoDistributedInMinorPremise() {
 		return !conclusion.subjectDistributed || minorPremise.isMajorOrMinorTermDistributed();
 	}
 
-	Boolean areBothPremisesNegative() {
+	private Boolean areBothPremisesNegative() {
 		return majorPremise.quality == Quality.NEGATIVE && minorPremise.quality == Quality.NEGATIVE;
 	}
 
-	Boolean hasNegativePremiseAndAffirmativeConclusion() {
+	private Boolean hasNegativePremiseAndAffirmativeConclusion() {
 		return (majorPremise.quality == Quality.NEGATIVE || minorPremise.quality == Quality.NEGATIVE)
 				&& conclusion.quality == Quality.AFFIRMATIVE;
 	}
 
-	Boolean hasTwoAffirmativePremisesAndNegativeConclusion() {
+	private Boolean hasTwoAffirmativePremisesAndNegativeConclusion() {
 		return majorPremise.quality == Quality.AFFIRMATIVE && minorPremise.quality == Quality.AFFIRMATIVE
 				&& conclusion.quality == Quality.NEGATIVE;
 	}
