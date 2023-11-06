@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class SyllogismSolver {
 	public static void main(String[] args) {
 		char[] moods = { 'A', 'E', 'I', 'O' };
-		Integer[] forms = { 1, 2, 3, 4 };
+		Integer[] figures = { 1, 2, 3, 4 };
 		SyllogismFactory syllogismFactory = new SyllogismFactory();
 
 		for (char majorPremiseMood : moods) {
 			for (char minorPremiseMood : moods) {
 				for (char conclusionMood : moods) {
-					for (Integer form : forms) {
-						String syllogismType = "" + majorPremiseMood + minorPremiseMood + conclusionMood + "-" + form;
+					for (Integer figure : figures) {
+						String syllogismType = "" + majorPremiseMood + minorPremiseMood + conclusionMood + "-" + figure;
 						Syllogism syllogism = syllogismFactory.Syllogism(syllogismType);
 						Fallacy[] fallacies = syllogism.getFallacies();
 						String text = syllogismType + ": ";
@@ -37,11 +37,11 @@ public class SyllogismSolver {
 class SyllogismFactory {
 	Syllogism Syllogism(String type) {
 		StatementFactory statementFactory = new StatementFactory();
-		Integer form = Character.getNumericValue(type.charAt(4));
+		Integer figure = Character.getNumericValue(type.charAt(4));
 
 		Term majorPremiseSubject;
 		Term majorPremisePredicate;
-		if (form == 1 || form == 3) {
+		if (figure == 1 || figure == 3) {
 			majorPremiseSubject = Term.MIDDLE_TERM;
 			majorPremisePredicate = Term.MAJOR_TERM;
 		} else {
@@ -51,7 +51,7 @@ class SyllogismFactory {
 
 		Term minorPremiseSubject;
 		Term minorPremisePredicate;
-		if (form == 1 || form == 2) {
+		if (figure == 1 || figure == 2) {
 			minorPremiseSubject = Term.MINOR_TERM;
 			minorPremisePredicate = Term.MIDDLE_TERM;
 		} else {
