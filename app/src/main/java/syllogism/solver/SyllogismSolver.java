@@ -108,27 +108,27 @@ class Syllogism {
 		ArrayList<Fallacy> fallacies = new ArrayList<Fallacy>();
 
 		if (!isMiddleTermDistributedInAtLeastOnePremise()) {
-			fallacies.add(Fallacy.FALLACY_OF_THE_UNDISTRIBUTED_MIDDLE);
+			fallacies.add(Fallacy.UNDISTRIBUTED_MIDDLE);
 		}
 
 		if (!ifMajorTermDistributedInConclusionIsItAlsoDistributedInMajorPremise()) {
-			fallacies.add(Fallacy.FALLACY_OF_AN_ILLICIT_MAJOR);
+			fallacies.add(Fallacy.ILLICIT_MAJOR);
 		}
 
 		if (!ifMinorTermDistributedInConclusionIsItAlsoDistributedInMinorPremise()) {
-			fallacies.add(Fallacy.FALLACY_OF_AN_ILLICIT_MINOR);
+			fallacies.add(Fallacy.ILLICIT_MINOR);
 		}
 
 		if (areBothPremisesNegative()) {
-			fallacies.add(Fallacy.FALLACY_OF_TWO_NEGATIVE_PREMISES);
+			fallacies.add(Fallacy.TWO_NEGATIVE_PREMISES);
 		}
 
 		if (hasNegativePremiseAndAffirmativeConclusion()) {
-			fallacies.add(Fallacy.FALLACY_OF_A_NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION);
+			fallacies.add(Fallacy.NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION);
 		}
 
 		if (hasTwoAffirmativePremisesAndNegativeConclusion()) {
-			fallacies.add(Fallacy.FALLACY_OF_TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION);
+			fallacies.add(Fallacy.TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION);
 		}
 
 		return fallacies.toArray(new Fallacy[0]);
@@ -162,12 +162,12 @@ class Syllogism {
 }
 
 enum Fallacy {
-	FALLACY_OF_THE_UNDISTRIBUTED_MIDDLE,
-	FALLACY_OF_AN_ILLICIT_MAJOR,
-	FALLACY_OF_AN_ILLICIT_MINOR,
-	FALLACY_OF_TWO_NEGATIVE_PREMISES,
-	FALLACY_OF_A_NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION,
-	FALLACY_OF_TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION
+	UNDISTRIBUTED_MIDDLE,
+	ILLICIT_MAJOR,
+	ILLICIT_MINOR,
+	TWO_NEGATIVE_PREMISES,
+	NEGATIVE_PREMISE_AND_AN_AFFIRMATIVE_CONCLUSION,
+	TWO_AFFIRMATIVE_PREMISES_AND_A_NEGATIVE_CONCLUSION
 }
 
 enum Quality {
